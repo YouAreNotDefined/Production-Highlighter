@@ -1,5 +1,5 @@
 interface Config {
-  url: string
+  urls: string
   text: string
   backgroundColor: string
   textColor: string
@@ -7,7 +7,7 @@ interface Config {
 }
 
 const defaultConfig: Config = {
-  url: '',
+  urls: '',
   text: '',
   backgroundColor: '#00bcd4',
   textColor: '#ffffff',

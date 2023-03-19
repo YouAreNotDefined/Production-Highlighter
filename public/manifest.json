@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "production-highlighter",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "production-highlighter",
   "background": {
     "service_worker": "background.js"
@@ -13,12 +13,15 @@
   "permissions": [
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "scripting"
   ],
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "<all_urls>",
+        "http://*/*",
+        "https://*/*"
       ],
       "js": [
         "content.js"
@@ -26,6 +29,6 @@
     }
   ],
   "icons": {
-    "48": "production-highlighter-icon.jpg"
+    "48": "production-highlighter-icon.png"
   }
 }

@@ -5,32 +5,38 @@
       fluid
     >
       <v-row>
-        <v-col class="pa-8">
+        <v-col class="px-8 py-5">
           <v-form>
-            <h1 class="h1 mb-3">Configuration</h1>
             <v-select
               v-model="config.position"
               required
-              class="mb-2"
+              class="mb-5"
               :items="positionList"
               label="Position"
+              hide-details
             />
-            <v-text-field
-              v-model="config.url"
-              class="mb-2"
+            <v-textarea
+              v-model="config.urls"
+              auto-grow
+              class="mb-5"
               label="Production URL"
+              rows="2"
               outlined
               type="text"
+              hide-details
             />
             <v-text-field
               v-model="config.text"
-              class="mb-2"
+              class="mb-5"
               label="Text"
               outlined
               type="text"
+              hide-details
             />
-            <v-color-picker v-model="config.backgroundColor" />
-            <v-color-picker v-model="config.textColor" />
+            <div class="v-label mb-2 theme--light">Background Color</div>
+            <v-color-picker v-model="config.backgroundColor" width="360" hide-inputs class="mb-4" />
+            <div class="v-label mb-2 theme--light">Text Color</div>
+            <v-color-picker v-model="config.textColor" width="360" hide-inputs />
             <div class="text-center">
               <v-btn
                 color="primary"
@@ -52,12 +58,12 @@
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
 import Component from 'vue-class-component'
-import { VBtn, VApp, VContainer, VSelect, VTextField, VColorPicker } from 'vuetify/lib'
+import { VBtn, VApp, VContainer, VSelect, VTextarea, VTextField, VColorPicker } from 'vuetify/lib'
 import { Config, defaultConfig } from '../common'
 
 @Component({
   components: {
-    VBtn, VApp, VContainer, VSelect, VTextField, VColorPicker
+    VBtn, VApp, VContainer, VSelect, VTextarea, VTextField, VColorPicker
   },
 })
 
@@ -67,17 +73,19 @@ export default class App extends Vue {
   config: Config = defaultConfig
 
   public mounted() {
-    chrome.storage.local.get('config', ({ config }) => {
+    chrome.storage.sync.get('config', ({ config }) => {
       this.config = JSON.parse(config)
     })
   }
 
   save() {
     this.saving = true
-    chrome.storage.local.set({ 'config': JSON.stringify(this.config) }, () => {
+    chrome.storage.sync.set({ 'config': JSON.stringify(this.config) }, () => {
       setTimeout(() => {
         this.saving = false
       }, 500)
+
+      chrome.runtime.sendMessage({ message: 'updatedConfig' })
     })
   }
 }
